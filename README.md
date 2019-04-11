@@ -8,7 +8,7 @@ $ git clone http://github.com/dmoutinho/hello-spring-boot-war
 $ mvn clean install
 ```
 
-3- Deploying
+3- Deploying Tomcat 8.5.39
 ```sh
 $ cp \hello-spring-boot-war\target\hello-spring-boot-war-1.0.war \Tomcat8.5.39\webapps
 $ \Tomcat8.5.39\bin\catalina.bat run
@@ -19,7 +19,7 @@ $ \Tomcat8.5.39\bin\catalina.bat run
 $ http://localhost:8080/hello-spring-boot-war-1.0/news/1
 ```
 
-5- Updating **Get Method**: com.dmoutinho.hellospringbootwar.HelloICPController
+5- Changing **Get Method**: com.dmoutinho.hellospringbootwar.HelloICPController
 ```sh
 @GetMapping("/news/{id}")
 ResponseEntity<News> news(@PathVariable("id") String id) {
