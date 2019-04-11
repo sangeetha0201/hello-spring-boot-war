@@ -10,7 +10,8 @@ $ mvn clean install
 
 3- Deploying
 ```sh
-$ cp \hello-spring-boot-war\target\hello-spring-boot-war-1.0.war
+$ cp \hello-spring-boot-war\target\hello-spring-boot-war-1.0.war \Tomcat8.5.39\webapps
+$ \Tomcat8.5.39\bin\catalina.bat run
 ```
 
 4- Accessing
