@@ -1,4 +1,4 @@
-package com.dmoutinho.hellospringbootwar;
+package com.dmoutinho.hellospringbootwar.app;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

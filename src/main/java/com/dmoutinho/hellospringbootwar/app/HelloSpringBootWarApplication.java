@@ -1,8 +1,10 @@
-package com.dmoutinho.hellospringbootwar;
+package com.dmoutinho.hellospringbootwar.app;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -11,6 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dmoutinho.hellospringbootwar.model.News;
+import com.dmoutinho.hellospringbootwar.repository.NewsRepository;
+
+@Configuration
+@ComponentScan("com.dmoutinho.hellospringbootwar")
 @SpringBootApplication
 public class HelloSpringBootWarApplication {
 	public static void main(String[] args) {
@@ -22,47 +29,20 @@ public class HelloSpringBootWarApplication {
 @RequestMapping("/")
 class HelloICPController {
     
+	@Autowired
+	private NewsRepository newsRepository;
+	
 	@GetMapping("/news/{id}")
 	ResponseEntity<News> news(@PathVariable("id") String id) {
-		ResponseEntity<News> responseEntity = null;
-    	try {
-    		switch (id) {
-				case "1":
-		    		responseEntity = new ResponseEntity<News>(new News("Title 1","Content 1"),HttpStatus.OK);
-					break;
-				case "2":
-		    		responseEntity = new ResponseEntity<News>(new News("Title 2","Content 2"),HttpStatus.OK);
-					break;
-				default:
-		    		responseEntity = new ResponseEntity<News>(HttpStatus.NOT_FOUND);
-					break;
-			}
+    	News news = null;
+    	HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		try {
+			news = this.newsRepository.getById(id);
+			status = news==null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        return responseEntity;
+        return new ResponseEntity<>(news,status);
     }
 		
-}
-
-class News {
-	private String title;
-	private String content;
-	public News(String title, String content) {
-		super();
-		this.title = title;
-		this.content = content;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
 }
