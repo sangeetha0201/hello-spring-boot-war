@@ -2,6 +2,7 @@ package com.dmoutinho.hellospringbootwar.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dmoutinho.hellospringbootwar.model.News;
-import com.dmoutinho.hellospringbootwar.repository.NewsRepository;
+import com.dmoutinho.hellospringbootwar.service.NewsService;
 
+@EnableAutoConfiguration
 @Configuration
 @ComponentScan("com.dmoutinho.hellospringbootwar")
 @SpringBootApplication
@@ -30,14 +32,14 @@ public class HelloSpringBootWarApplication {
 class HelloICPController {
     
 	@Autowired
-	private NewsRepository newsRepository;
+	private NewsService newsService;
 	
 	@GetMapping("/news/{id}")
 	ResponseEntity<News> news(@PathVariable("id") String id) {
     	News news = null;
     	HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		try {
-			news = this.newsRepository.getById(id);
+			news = this.newsService.getById(id);
 			status = news==null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
 		} catch (Exception e) {
 			e.printStackTrace();

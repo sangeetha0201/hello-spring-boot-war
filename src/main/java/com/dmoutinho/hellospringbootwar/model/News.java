@@ -10,6 +10,12 @@ public class News {
 		this.title = title;
 		this.content = content;
 	}
+	
+	@Override
+	public String toString() {
+		return "News [title=" + title + ", content=" + content + "]";
+	}
+
 	public String getTitle() {
 		return title;
 	}
