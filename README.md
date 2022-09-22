@@ -1,9 +1,9 @@
-1- Cloning...
+1- Cloning..................
 ```sh
 $ git clone http://github.com/dmoutinho/hello-spring-boot-war
 ```
 
-2- Building
+2- Building.................
 ```sh
 $ mvn clean install
 ```
