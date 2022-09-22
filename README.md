@@ -14,7 +14,7 @@ $ cp \hello-spring-boot-war\target\hello-spring-boot-war-1.0.war \Tomcat8.5.39\w
 $ \Tomcat8.5.39\bin\catalina.bat run
 ```
 
-4- Accessing...........
+4- Accessing.................................
 ```sh
 $ http://localhost:8080/hello-spring-boot-war-1.0/news/1
 ```
