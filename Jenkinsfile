@@ -23,7 +23,7 @@ pipeline {
             }
             stage('maven build'){
                 agent {
-                    label ubuntu-slave-1
+                    label 'ubuntu-slave-1'
                   }
                 steps{
                     sh 'mvn clean install'
