@@ -13,7 +13,7 @@ pipeline {
             stage("Quality Gate") {
                 agent any
                 steps {
-                    sleep(60)
+                    sleep(10)
                     timeout(time: 5, unit: 'MINUTES') {
                         // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                         // true = set pipeline to UNSTABLE, false = don't
@@ -32,6 +32,7 @@ pipeline {
             }
           post {
           always {
+            agent any
             junit '**/target/surefire-reports/*.xml'
           }
        } 
