@@ -31,9 +31,6 @@ pipeline {
             }
             }
           post {
-               agent {
-                 label ubuntu-slave-1
-                  }
           always {
             junit '**/target/surefire-reports/*.xml'
           }
