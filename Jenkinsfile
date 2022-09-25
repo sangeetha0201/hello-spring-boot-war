@@ -29,13 +29,5 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('copy war to S3'){
-            agent {
-                label 'ubuntu-slave-1'
-              }
-            steps{
-                sh "aws s3 cp ${WORKSPACE}/target/*.war s3://sangeetha-jenkins-war"
-            }
-        }
         }
     }
