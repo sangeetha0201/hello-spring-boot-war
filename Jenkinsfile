@@ -43,7 +43,7 @@ pipeline {
                 label 'ubuntu-slave-1'
               }        
             steps{
-                deploy adapters: [tomcat9(credentialsId: 'tomcat-creds', path: '', url: 'http://3.108.67.15:8080/')], contextPath: null, war: '${WORKSPACE}/target/hello-spring-boot-war-${BUILD_NUMBER}.war'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-creds', path: '', url: 'http://3.108.67.15:8080/')], contextPath: null, war: '**/*.war'
             }
         }
         }
