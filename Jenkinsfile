@@ -29,5 +29,13 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+        stage('upload war to s3'){
+            agent {
+                label 'ubuntu-slave-1'
+              }
+            steps{
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'sangeetha-jenkins-war', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: '${WORKSPACE}/target/*.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3-uploads', userMetadata: []
+            }
+        }
         }
     }
