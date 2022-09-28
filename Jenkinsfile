@@ -1,8 +1,7 @@
 pipeline {
-    agent none
+    agent any
     stages {
         stage('SonarQube analysis') {
-            agent any
             steps {
                 withSonarQubeEnv('local-sonar1') {
                    bat 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install org.jacoco:jacoco-maven-plugin:report'
@@ -11,7 +10,6 @@ pipeline {
             }
         }
         stage("Quality Gate") {
-            agent any
             steps {
                 sleep(10)
                 timeout(time: 5, unit: 'MINUTES') {
@@ -22,28 +20,24 @@ pipeline {
             }
         }
         stage('maven build'){
-            agent {
-                label 'ubuntu-slave-1'
-              }
             steps{
                 sh 'mvn clean install'
                 sh 'mv ${WORKSPACE}/target/*.war ${WORKSPACE}/target/hello-spring-boot-war-${BUILD_NUMBER}.war'
             }
         }
-        stage('upload war to s3'){    
-            agent {
-                label 'ubuntu-slave-1'
-              }       
+        stage('upload war to s3'){        
             steps{
                 s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'sangeetha-jenkins-war', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: 'target/hello-spring-boot-war-${BUILD_NUMBER}.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3-uploads', userMetadata: []
             }
         }
-        stage('deploy to tomcatserver'){   
-            agent {
-                label 'ubuntu-slave-1'
-              }        
+        stage('deploy to tomcatserver1'){       
             steps{
-                deploy adapters: [tomcat9(credentialsId: 'tomcat-creds', path: '', url: 'http://3.108.67.15:8080/')], contextPath: null, war: '**/*.war'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://15.206.172.97:8080/')], contextPath: null, war: '**/*.war'
+            }
+        }
+        stage('deploy to tomcatserver2'){       
+            steps{
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://3.110.173.41:8080/')], contextPath: null, war: '**/*.war'
             }
         }
         }
