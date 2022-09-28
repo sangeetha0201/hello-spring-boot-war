@@ -26,12 +26,12 @@ pipeline {
         }
         stage('deploy to tomcatserver1'){       
             steps{
-                deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://15.206.172.97:8080/')], contextPath: null, war: '**/*.war'
+                bat deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://15.206.172.97:8080/')], contextPath: null, war: '**/*.war'
             }
         }
         stage('deploy to tomcatserver2'){       
             steps{
-               deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://3.110.173.41:8080/')], contextPath: null, war: '**/*.war'
+                bat deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://3.110.173.41:8080/')], contextPath: null, war: '**/*.war'
             }
         }
         }
