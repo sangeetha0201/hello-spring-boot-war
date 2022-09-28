@@ -11,7 +11,7 @@ pipeline {
         }
         stage("Quality Gate") {
             steps {
-                sleep(10)
+                sleep(60)
                 timeout(time: 5, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
