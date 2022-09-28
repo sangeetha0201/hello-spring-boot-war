@@ -21,7 +21,7 @@ pipeline {
         }
         stage('maven build'){
             steps{
-                sh 'mvn clean install'
+                bat 'mvn clean install'
             }
         }
         stage('upload war to s3'){        
