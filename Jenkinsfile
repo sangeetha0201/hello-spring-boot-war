@@ -26,7 +26,7 @@ pipeline {
         }
         stage('deploy to tomcatserver1'){       
             steps{
-                bat deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://15.206.172.97:8080/')], contextPath: null, war: '**/*.war'
+                bat deploy adapters : {[tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://15.206.172.97:8080/')], contextPath: null, war: '**/*.war'}
             }
         }
         stage('deploy to tomcatserver2'){       
