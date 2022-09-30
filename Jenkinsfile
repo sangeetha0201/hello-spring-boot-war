@@ -1,25 +1,27 @@
 pipeline {
     agent any
     stages {
+        
         stage('maven build'){
             steps{
                 bat 'mvn clean install'
             }
         }
         }
-  post {
-    always {
+        post {
+        always {
         rtUpload (
-			serverId: 'jfrog-creds',
+			serverId: 'local-jfrog',
 			spec: '''{
 				"files": [
 					{
 					"pattern": "**/*.war",
-					"target": "Projects/%JOB_NAME%/"
+					"target": "Projects/${JOB_NAME}/"
 					}
 				]
 			}''',
-
+ 
         )
         }
    }
+     }
