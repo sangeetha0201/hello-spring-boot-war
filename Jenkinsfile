@@ -11,7 +11,7 @@ pipeline {
         post {
         always {
         rtUpload (
-			serverId: 'local-jfrog',
+			serverId: 'jfrog-creds',
 			spec: '''{
 				"files": [
 					{
