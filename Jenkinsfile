@@ -4,7 +4,7 @@ pipeline {
         stage('maven build'){
             steps{
                 bat 'mvn clean install'
-                bat 'mv /target/*.war /target/${JOB_NAME}-${BUILD_NUMBER}.war'
+                bat 'move /target/*.war /target/${JOB_NAME}-${BUILD_NUMBER}.war'
             }
         }
         }
