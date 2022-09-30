@@ -4,7 +4,7 @@ pipeline {
         stage('maven build'){
             steps{
                 bat 'mvn clean install'
-                bat 'ren /target/*.war /target/${JOB_NAME}-${BUILD_NUMBER}.war'
+                bat '/target/*.war /target/${JOB_NAME}-${BUILD_NUMBER}.war'
             }
         }
         }
