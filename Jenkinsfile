@@ -4,7 +4,6 @@ pipeline {
         stage('maven build'){
             steps{
                 bat 'mvn clean install'
-                bat '/target/*.war /target/${JOB_NAME}-${BUILD_NUMBER}.war'
             }
         }
         }
@@ -15,13 +14,12 @@ pipeline {
 			spec: '''{
 				"files": [
 					{
-					"pattern": "**/${JOB_NAME}-${BUILD_NUMBER}.war",
-					"target": "Projects/${JOB_NAME}/"
+					"pattern": "**/*.war",
+					"target": "Projects/%JOB_NAME%/"
 					}
 				]
 			}''',
- 
+
         )
         }
    }
-}
