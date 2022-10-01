@@ -27,7 +27,6 @@ pipeline {
               }
             steps{
                 sh 'mvn clean install'
-                sh 'mv ${WORKSPACE}/target/*.war ${WORKSPACE}/target/hello-spring-boot-war-${BUILD_NUMBER}.war'
             }
         }
         stage('deploy to tomcatserver1'){   
