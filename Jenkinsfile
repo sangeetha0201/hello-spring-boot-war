@@ -53,5 +53,20 @@ pipeline {
                 deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://13.127.71.126:8080/')], contextPath: null, war: '**/*.war'
             }
         }
-        }
+    }
+    post {
+    always {
+    rtUpload (
+        serverId: 'jfrog-creds',
+        spec: '''{
+            "files": [
+                {
+                "pattern": "**/*.war",
+                "target": "Projects/${JOB_NAME}/"
+                }
+            ]
+        }''',
+
+    )
+    }
     }
