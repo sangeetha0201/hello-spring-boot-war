@@ -27,6 +27,7 @@ pipeline {
               }
             steps{
                 sh 'mvn clean install'
+                sh  'mv target/*.war target/${JOB_NAME}-${BUILD_NUMBER}.war'
             }
         }
         stage('upload war to s3'){    
@@ -34,7 +35,7 @@ pipeline {
                 label 'slave-machine1'
               }       
             steps{
-                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'sangeetha-jenkins-war', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: '**/*.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3-uploads', userMetadata: []
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'sangeetha-jenkins-war', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: 'target/${JOB_NAME}-${BUILD_NUMBER}.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3-uploads', userMetadata: []
             }
         }
         stage('deploy to tomcatserver1'){   
@@ -42,7 +43,7 @@ pipeline {
                 label 'slave-machine1'
               }        
             steps{
-                deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://65.2.175.62:8080/')], contextPath: null, war: '**/*.war'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://65.2.175.62:8080/')], contextPath: null, war: 'target/${JOB_NAME}-${BUILD_NUMBER}.war'
             }
         }
         stage('deploy to tomcatserver2'){   
@@ -50,7 +51,7 @@ pipeline {
                 label 'slave-machine1'
               }        
             steps{
-                deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://13.127.71.126:8080/')], contextPath: null, war: '**/*.war'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://13.127.71.126:8080/')], contextPath: null, war: 'target/${JOB_NAME}-${BUILD_NUMBER}.war'
             }
         }
     }
@@ -61,7 +62,7 @@ pipeline {
         spec: '''{
             "files": [
                 {
-                "pattern": "**/*.war",
+                "pattern": "target/${JOB_NAME}-${BUILD_NUMBER}.war",
                 "target": "Projects/${JOB_NAME}/"
                 }
             ]
