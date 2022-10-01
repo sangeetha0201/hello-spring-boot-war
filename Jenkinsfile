@@ -23,7 +23,7 @@ pipeline {
         }
         stage('maven build'){
             agent {
-                label 'slave-machine-1'
+                label 'slave-machine1'
               }
             steps{
                 sh 'mvn clean install'
@@ -31,7 +31,7 @@ pipeline {
         }
         stage('deploy to tomcatserver1'){   
             agent {
-                label 'slave-machine-1'
+                label 'slave-machine1'
               }        
             steps{
                 deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://65.2.175.62:8080/')], contextPath: null, war: '**/*.war'
@@ -39,7 +39,7 @@ pipeline {
         }
         stage('deploy to tomcatserver2'){   
             agent {
-                label 'slave-machine-1'
+                label 'slave-machine1'
               }        
             steps{
                 deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://13.127.71.126:8080/')], contextPath: null, war: '**/*.war'
