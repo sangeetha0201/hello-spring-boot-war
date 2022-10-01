@@ -13,8 +13,8 @@ pipeline {
         stage("Quality Gate") {
             agent any
             steps {
-                sleep(10)
-                timeout(time: 5, unit: 'MINUTES') {
+                sleep(60)
+                timeout(time: 1, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
@@ -23,16 +23,23 @@ pipeline {
         }
         stage('maven build'){
             agent {
-                label 'slave-machine-1'
+                label 'slave-machine1'
               }
             steps{
                 sh 'mvn clean install'
-                sh 'mv ${WORKSPACE}/target/*.war ${WORKSPACE}/target/hello-spring-boot-war-${BUILD_NUMBER}.war'
+            }
+        }
+        stage('upload war to s3'){    
+            agent {
+                label 'slave-machine1'
+              }       
+            steps{
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'sangeetha-jenkins-war', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: 'target/hello-spring-boot-war-${BUILD_NUMBER}.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3-uploads', userMetadata: []
             }
         }
         stage('deploy to tomcatserver1'){   
             agent {
-                label 'slave-machine-1'
+                label 'slave-machine1'
               }        
             steps{
                 deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://65.2.175.62:8080/')], contextPath: null, war: '**/*.war'
@@ -40,27 +47,26 @@ pipeline {
         }
         stage('deploy to tomcatserver2'){   
             agent {
-                label 'slave-machine-1'
+                label 'slave-machine1'
               }        
             steps{
                 deploy adapters: [tomcat9(credentialsId: 'tomcat-server2', path: '', url: 'http://13.127.71.126:8080/')], contextPath: null, war: '**/*.war'
             }
         }
-    }
-    post {
-        always {
-        rtUpload (
-			serverId: 'jfrog-creds',
-			spec: '''{
-				"files": [
-					{
-					"pattern": "**/*.war",
-					"target": "Projects/${JOB_NAME}/"
-					}
-				]
-			}''',
- 
-        )
         }
-   }
-}
+        post {
+            always {
+            rtUpload (
+                serverId: 'jfrog-creds',
+                spec: '''{
+                    "files": [
+                        {
+                        "pattern": "**/*.war",
+                        "target": "Projects/${JOB_NAME}/"
+                        }
+                    ]
+                }''',
+        
+            )
+            }
+    }
