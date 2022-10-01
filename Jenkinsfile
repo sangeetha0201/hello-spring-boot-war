@@ -47,19 +47,4 @@ pipeline {
         }
         }
     }
-    post {
-        always {
-        rtUpload (
-			serverId: 'jfrog-creds',
-			spec: '''{
-				"files": [
-					{
-					"pattern": "**/*.war",
-					"target": "Projects/${JOB_NAME}/"
-					}
-				]
-			}''',
- 
-        )
-        }
    }
