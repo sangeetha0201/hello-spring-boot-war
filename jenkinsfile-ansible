@@ -1,12 +1,14 @@
 pipeline {
-    agent any
-    stages {
+    agent none
+    stages { 
         stage('maven build'){
+           agent any
             steps{
                 sh 'mvn -DskipTests clean install'
             }
         }
         stage('Deploy to tomcat Server'){
+           agent {label "ansible-master"}
             steps{
                 sh "whoami"
                 sh 'ansible-playbook /home/ubuntu/ansible/tomcat-deploy-dev.yml'
