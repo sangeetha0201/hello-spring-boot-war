@@ -5,11 +5,13 @@ pipeline {
            agent any
             steps{
                 sh 'mvn -DskipTests clean install'
+                stash includes: '**/target/*.war', name: 'app' 
             }
         }
         stage('Deploy to tomcat Server'){
            agent {label "ansible-master"}
             steps{
+                unstash 'app'
                 sh "whoami"
                 sh 'ansible-playbook /home/ubuntu/ansible/tomcat-deploy-dev.yml'
             }
