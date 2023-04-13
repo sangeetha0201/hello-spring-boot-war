@@ -4,6 +4,7 @@ pipeline {
         stage('maven build'){
             steps{
                 sh 'mvn -DskipTests install package'
+                sh 'mv ${WORKSPACE}/target/*.war ${WORKSPACE}/target/hello-spring-boot-war-${BUILD_NUMBER}.war'
             }
         }
         stage('deploy to tomcatserver1'){     
