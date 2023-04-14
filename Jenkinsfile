@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent { label 'jenkins-slave1' }
     stages {
         stage('SonarQube analysis') {
             steps {
