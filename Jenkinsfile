@@ -12,7 +12,6 @@ pipeline {
         stage('maven build'){
             steps{
                 bat 'mvn -DskipTests clean package'
-                bat 'mv ${WORKSPACE}/target/*.war ${WORKSPACE}/target/hello-spring-boot-war-${BUILD_NUMBER}.war'
             }
         }
         }
