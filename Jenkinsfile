@@ -1,6 +1,14 @@
 pipeline {
     agent { label 'jenkins-slave1' }
     stages {
+        stage('SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('local-sonar') {
+                   sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install org.jacoco:jacoco-maven-plugin:report'
+                   sh 'mvn sonar:sonar' 
+                }
+            }
+        }
         stage('maven build'){
             steps{
                 sh 'mvn -DskipTests clean package'
