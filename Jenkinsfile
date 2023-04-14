@@ -9,7 +9,7 @@ pipeline {
         }
         stage('upload war to s3'){       
             steps{
-                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'sangeetha-jenkins-war', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: 'target/hello-spring-boot-war-${BUILD_NUMBER}.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3-uploads', userMetadata: []
+                sh "aws s3 cp ${WORKSPACE}/target/hello-spring-boot-war-${BUILD_NUMBER}.war s3://sangeetha-jenkins-war"
             }
         }
         stage('deploy to tomcatserver1'){     
