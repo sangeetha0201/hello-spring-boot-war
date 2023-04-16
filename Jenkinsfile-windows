@@ -24,6 +24,11 @@ pipeline {
                 bat 'mvn -DskipTests clean package'
             }
         }
+        stage('deploy to tomcatserver1'){       
+            steps{
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://43.205.136.136:8080/')], contextPath: null, war: '**/*.war'
+            }
+        }
         }
         post {
         always {
@@ -41,4 +46,3 @@ pipeline {
         )
         }
    }
-    }
