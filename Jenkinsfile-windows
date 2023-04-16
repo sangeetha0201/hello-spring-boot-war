@@ -1,4 +1,9 @@
 pipeline {
+    environment {
+        registry = "sandeep4642/hello-spring-boot-war"    
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+      }
     agent any
     stages {
         stage('SonarQube analysis') {
@@ -24,11 +29,28 @@ pipeline {
                 bat 'mvn -DskipTests clean package'
             }
         }
-        stage('deploy to tomcatserver1'){       
+        stage('Building Docker image') {
             steps{
-                deploy adapters: [tomcat9(credentialsId: 'tomcat-server1', path: '', url: 'http://43.205.136.136:8080/')], contextPath: null, war: '**/*.war'
+              script {
+                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+              }
             }
+        
         }
+        stage('Deploy push') {
+            steps{
+              script {
+                docker.withRegistry( '', registryCredential ) {
+                  dockerImage.push()
+                }
+              }
+            }
+          }
+        stage('Remove Unused docker image') {
+            steps{
+              sh "docker rmi $registry:$BUILD_NUMBER"
+            }
+          }
         }
         post {
         always {
