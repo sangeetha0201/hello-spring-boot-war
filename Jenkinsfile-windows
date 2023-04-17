@@ -30,12 +30,14 @@ pipeline {
             agent { label "master"}
             steps{
                 bat 'mvn -DskipTests clean package'
+		stash includes: 'target/*.war', name: 'targetfiles'
             }
         }
         stage('Building Docker image') {
             agent { label "docker-slave"}
             steps{
               script {
+	        unstash 'targetfiles'
                 dockerImage = docker.build registry + ":$BUILD_NUMBER"
               }
             }
