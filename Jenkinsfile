@@ -4,27 +4,27 @@ pipeline {
         registryCredential = 'dockerhub'
         dockerImage = ''
       }
-    agent any
+    agent { label "docker-slave"}
     stages {
         stage('maven build'){
-            agent { label "master"}
+            
             steps{
-                bat 'mvn -DskipTests clean package'
-                stash includes: 'target/*.war', name: 'targetfiles'
+                sh 'mvn -DskipTests clean package'
+                
             }
         }
+  
         stage('Building Docker image') {
-            agent { label "docker-slave"}
             steps{
               script {
-                unstash 'targetfiles'
+                
                 dockerImage = docker.build registry + ":$BUILD_NUMBER"
               }
             }
         
         }
         stage('Deploy push') {
-            agent { label "docker-slave"}
+            
             steps{
               script {
                 docker.withRegistry( '', registryCredential ) {
@@ -33,17 +33,19 @@ pipeline {
               }
             }
           }
-          stage('Deploy to docker-Server1'){
-            agent { label "docker-slave"}
-            steps{
-                sh 'ansible-playbook deploy_docker.yaml --extra-vars "job_name=$JOB_NAME" --extra-vars "build_no=$BUILD_NUMBER"'
-            }
-        }
         stage('Remove Unused docker image') {
-            agent { label "docker-slave"}
+            
             steps{
               sh "docker rmi $registry:$BUILD_NUMBER"
             }
           }
-        }  
+	    stage('Deploy to Server'){
+            
+            steps{
+                sh 'whoami'
+                sh 'ansible-playbook /home/jenkins/war-deploy.yml --extra-vars "deploy_server=dev" --extra-vars "job_name=$JOB_NAME" --extra-vars "build_no=$BUILD_NUMBER" --extra-vars "port_no=8080"'
+                
+            }
         }
+        }
+   }
