@@ -1,7 +1,7 @@
 pipeline {
     agent { label "docker-slave"}
     stages{
-	    stage('Deploy to Server'){
+	    stage('Deploy to $DEPLOY_ENV'){
             
             steps{
                 sh 'whoami'
